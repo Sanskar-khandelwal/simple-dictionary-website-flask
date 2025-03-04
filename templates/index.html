@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Definition Finder</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Poppins:400,700,900");
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+      /* Base styling */
+      body {
+        font-family: "Poppins", "Roboto", sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 50px;
+        max-width: 720px;
+        margin: 0 auto;
+        font-size: 18px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      h1 {
+        color: inherit;
+        margin-bottom: 20px;
+      }
+
+      input {
+        padding: 12px 20px;
+        width: 100%;
+        max-width: 350px;
+        margin: 10px 0;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 18px;
+        background-color: #f9f9f9;
+        color: #333;
+        transition: border 0.3s;
+      }
+
+      input:focus {
+        outline: none;
+        border: 1px solid #3498db;
+      }
+
+      button {
+        padding: 12px 20px;
+        cursor: pointer;
+        background-color: #3498db;
+        color: white;
+        border-radius: 10px;
+        border: none;
+        font-size: 18px;
+        margin-top: 10px;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      #result {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: 400;
+        text-align: left;
+        line-height: 30px;
+        color: inherit;
+      }
+
+      #theme-toggler {
+        padding: 8px 16px;
+        background-color: #444;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+      }
+
+      #theme-toggler:hover {
+        background-color: #555;
+      }
+
+      /* Dark theme */
+      .dark-theme {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+      }
+
+      .dark-theme input {
+        background-color: #34495e;
+        color: #ecf0f1;
+      }
+
+      .dark-theme button {
+        background-color: #2980b9;
+      }
+
+      .dark-theme button:hover {
+        background-color: #3498db;
+      }
+
+      .dark-theme #result {
+        color: #ecf0f1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Word Dictionary</h1>
+    <input type="text" id="wordInput" placeholder="Enter a word" />
+    <button onclick="fetchDefinition()">Search</button>
+    <div id="result"></div>
+    <button id="theme-toggler" onclick="toggleTheme()">
+      Switch to Dark Theme
+    </button>
+
+    <script>
+      function fetchDefinition() {
+        let word = document.getElementById("wordInput").value.trim();
+        if (!word) {
+          alert("Please enter a word.");
+          return;
+        }
+
+        fetch(`/api/v1/${word}`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerText = `${data.definition}`;
+          })
+          .catch((error) => {
+            console.error("Error fetching definition:", error);
+            document.getElementById("result").innerText =
+              "Error fetching definition.";
+          });
+      }
+
+      // Theme toggler function
+      function toggleTheme() {
+        const body = document.body;
+        const themeToggler = document.getElementById("theme-toggler");
+
+        // Toggle dark theme class
+        body.classList.toggle("dark-theme");
+
+        // Change button text based on theme
+        if (body.classList.contains("dark-theme")) {
+          themeToggler.innerText = "Switch to Light Theme";
+        } else {
+          themeToggler.innerText = "Switch to Dark Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
